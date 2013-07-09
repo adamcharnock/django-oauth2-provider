@@ -442,6 +442,15 @@ class AccessToken(OAuthView, Mixin):
         return HttpResponse(json.dumps(error), mimetype=mimetype,
                 status=status, **kwargs)
 
+    def get_access_token_type(self, access_token):
+        """
+        Return the token_type associated with this access token.
+        The default value is ``bearer``
+
+        :return: ``string`` - ``bearer``
+        """
+        return 'bearer'
+
     def access_token_response(self, access_token):
         """
         Returns a successful response after creating the access token
@@ -453,6 +462,7 @@ class AccessToken(OAuthView, Mixin):
                 'expires_in': access_token.get_expire_delta(),
                 'refresh_token': access_token.refresh_token.token,
                 'scope': ' '.join(scope.names(access_token.scope)),
+                'token_type': self.get_access_token_type(access_token),
             }), mimetype='application/json'
         )
 
